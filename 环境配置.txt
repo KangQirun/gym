@@ -1,0 +1,1 @@
+php格式文件，用wamp或者appserv配置就行

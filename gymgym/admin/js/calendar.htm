@@ -1,0 +1,432 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>TD {
+	FONT-SIZE: 12px; FONT-FAMILY: arial; TEXT-ALIGN: center
+}
+TD.dt {
+	FONT-SIZE: 11px; FONT-FAMILY: arial; TEXT-ALIGN: center
+}
+A {
+	COLOR: blue
+}
+A:hover {
+	COLOR: red
+}
+A.bt {
+	COLOR: #888888
+}
+</STYLE>
+
+<SCRIPT language=javascript>
+<!--//
+var str='',i,j,yy,mm,openbound,callback;
+var fld1,fld2;
+var wp=window.parent;
+var cf=wp.document.getElementById("CalFrame");
+var fld,curday,sd,ed,today=new Date();
+var n_position,n_textdate,startdate,enddate,vailidday,oddeven,vailiddate,nextvailiddate,objecttype,mmm,ddd,thirdfocus;
+mmm="";
+today.setHours(0);today.setMinutes(0);today.setSeconds(0);today.setMilliseconds(0);
+//var lastyear=today.getYear(),lastmonth=today.getMonth();
+
+function parseDate(s)//解析日期
+{
+	var reg=new RegExp("[^0-9-]","")
+	if(s.search(reg)>=0)return today;
+	var ss=s.split("-");
+	if(ss.length!=3)return today;
+	if(isNaN(ss[0])||isNaN(ss[1])||isNaN(ss[2]))return today;
+	return new Date(parseFloat(ss[0]),parseFloat(ss[1])-1,parseFloat(ss[2]));
+}
+function resizeCalendar(){cf.width=144;cf.height=192;}//设定日历宽高
+function initCalendar()//初始化
+{
+	curday=today;
+	if(fld1&&fld1.value.length>0){curday=parseDate(fld1.value);}
+	if(fld2&&fld2.value.length>0){curday=parseDate(fld2.value);}	
+	if (!startdate==""){sd=parseDate(startdate)}
+	if (!enddate==""){ed=parseDate(enddate)}
+	//window.alert(startdate);
+	//window.alert(enddate);
+	drawCalendar(curday.getFullYear(),curday.getMonth());
+}
+function drawCalendar(y,m)//画日历
+{
+	var x=new Date(y,m,1),mv=x.getDay(),d=x.getDate(),de;
+	yy=x.getFullYear();mm=x.getMonth();
+	document.getElementById("yyyymm").innerHTML=yy+"."+(mm+1>9?mm+1:"0"+(mm+1));
+	//清空日历
+	for(var i=1;i<=mv;i++)
+	{
+		de=document.getElementById("d"+i);
+		de.innerHTML="";
+		de.bgColor="";
+	}
+	//画日历
+	while(x.getMonth()==mm)
+	{
+		de=document.getElementById("d"+(d+mv));
+		if(x.getTime()==curday.getTime())
+			de.bgColor="#dddddd";
+		else
+			de.bgColor="#DEF1F8";
+		if(x.getTime()==today.getTime())
+		{
+			//window.alert(1);
+			if(ifDraw(x))
+			{
+				de.innerHTML="<a href=javascript:setDate("+d+");><font color=red>"+d+"</font></a>";
+			}
+			else
+			{
+				de.innerHTML="<font color=#ff0000>"+d+"</font>";							
+			}
+			
+			
+		}
+		else if(x.getTime()<today.getTime())
+		{
+			
+			
+			//window.alert(2);
+			if(ifDraw(x))
+			{
+				if(openbound){de.innerHTML="<a href=javascript:setDate("+d+"); class=bt>"+d+"</a>";}
+				else{de.innerHTML="<font color=#888888>"+d+"</font>";}
+			}
+			else
+			{
+				de.innerHTML="<font color=#888888>"+d+"</font>";							
+			}			
+		}	
+		else
+		{
+			
+			//window.alert(3);
+			if(ifDraw(x))
+			{	
+				de.innerHTML="<a href=javascript:setDate("+d+");>"+d+"</a>";
+			}
+			else
+			{
+				de.innerHTML="<font color=#888888>"+d+"</font>";
+			}
+			
+			
+		}
+		x.setDate(++d);
+	}
+	while(d+mv<=42)
+	{
+		de=document.getElementById("d"+(d+mv));
+		de.innerHTML="";
+		de.bgColor="";
+		d++;
+	}
+}
+function drawCalendar222(y,m)//画日历
+{
+	var x=new Date(y,m,1),mv=x.getDay(),d=x.getDate(),de;
+	yy=x.getFullYear();mm=x.getMonth();
+	document.getElementById("yyyymm").innerHTML=yy+"."+(mm+1>9?mm+1:"0"+(mm+1));
+	//清空日历
+	for(var i=1;i<=mv;i++)
+	{
+		de=document.getElementById("d"+i);
+		de.innerHTML="";
+		de.bgColor="";
+	}
+	//画日历
+	while(x.getMonth()==mm)
+	{
+		de=document.getElementById("d"+(d+mv));
+		if(x.getTime()==curday.getTime())
+			de.bgColor="#dddddd";
+		else
+			de.bgColor="#DEF1F8";
+		if(x.getTime()==today.getTime())
+		{
+			//window.alert(1);
+			if(ifDraw(x))
+			{
+				de.innerHTML="<a href=javascript:setDate("+d+");><font color=red>"+d+"</font></a>";
+			}
+			else
+			{
+				de.innerHTML="<a href=javascript:setDate("+d+");><img  src=./date"+d+".gif  border=0></a>";	
+				//de.innerHTML="<img  src=./d.jpg  border=0>";						
+				//de.innerHTML="<a href=javascript:setDate("+d+");><font COLOR=#FF0000> X </font></a>";
+			}
+			
+			
+		}
+		else if(x.getTime()<today.getTime())
+		{
+			
+			
+			//window.alert(2);
+			if(ifDraw(x))
+			{
+				if(openbound){de.innerHTML="<a href=javascript:setDate("+d+"); class=bt>"+d+"</a>";}
+				else{de.innerHTML="<font color=#888888>"+d+"</font>";}
+			}
+			else
+			{
+				de.innerHTML="<a href=javascript:setDate("+d+");><img  src=./date"+d+".gif  border=0></a>";	
+				//de.innerHTML="<img  src=./d.jpg  border=0>";		
+				
+			//	de.innerHTML="<a href=javascript:setDate("+d+");><font COLOR=#FF0000> X </font></a>";
+			}			
+		}	
+		else
+		{
+			
+			//window.alert(3);
+			if(ifDraw(x))
+			{	
+				de.innerHTML="<a href=javascript:setDate("+d+");>"+d+"</a>";
+			}
+			else
+			{
+				de.innerHTML="<a href=javascript:setDate("+d+");><img  src=./date"+d+".gif  border=0></a>";	
+				//de.innerHTML="<img  src=./d.jpg  border=0>";	
+				//de.innerHTML="<a href=javascript:setDate("+d+");><font COLOR=#FF0000> X </font></a>";
+					
+			}
+			
+			
+		}
+		x.setDate(++d);
+	}
+	while(d+mv<=42)
+	{
+		de=document.getElementById("d"+(d+mv));
+		de.innerHTML="";
+		de.bgColor="";
+		d++;
+	}
+}
+
+function ifDraw(xd)
+{
+	if(!startdate==""&&!enddate=="")
+	{
+		
+		if(xd.getTime()>=sd.getTime()&&xd.getTime()<=ed.getTime())
+		{	
+			
+			if(returnOE(xd)&&returnVD(xd)&&returnVDE(xd))
+			{
+				return true
+			}
+			else
+			{
+				return false
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if(returnOE(xd)&&returnVD(xd)&&returnVDE(xd))
+		{
+			return true
+		}
+		else
+		{
+			return false
+		}
+		
+	}
+}
+function returnOE(xd)
+{
+	if(!oddeven=="")
+		{
+		if(oddeven=="0")
+		{
+			if(xd.getDate()%2==0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if(!(xd.getDate()%2==0))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	
+	}
+	else
+	{
+		return true;
+	}
+}
+function returnVD(xd)
+{
+	if(!vailidday=="")
+	{
+		if(vailidday.indexOf(xd.getDay().toString())>=0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return true;
+	}
+}
+function returnVDE(xd)
+{
+	if(!vailiddate=="")
+	{
+		if(vailiddate.indexOf(xd.getYear().toString()+"-"+(xd.getMonth()+1).toString()+"-"+xd.getDate().toString()+",")>=0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return true;
+	}
+}
+
+function setDate(d)//设置日期
+{
+	wp.hideCalendar();
+	/*
+	if(mm.toString().length==1)
+	{
+		mmm="0"+(mm+1).toString();
+	}
+	else
+	{
+		mmm=mm+1;
+	}
+	if(d.toString().length==1)
+	{
+		ddd="0"+d.toString();
+	}
+	else
+	{
+		ddd=d;
+	}
+	var dstr=yy+"-"+(mmm)+"-"+ddd;
+	*/
+	mmm=mm+1;
+	var dstr=yy+"-"+(mmm)+"-"+d;
+	if(callback&&callback.length>0){eval("wp."+callback+"(\""+dstr+"\")");}
+	else{fld1.value=dstr;}
+	if(!n_position==""&&!n_textdate=="")
+	{		
+		//wp.document.getElementById(n_textdate).value="";
+		var ob2 = wp.document.getElementById(n_position);
+		try
+		{
+			if ( ob2 == null || ob2.style.display=="none") 
+			{
+				return;
+			}
+		}
+		catch(exception)
+		{
+			return;
+		}
+//		wp.showCalendar(n_position,false,n_textdate,'','',startdate,enddate,vailidday,oddeven,nextvailiddate,objecttype,thirdfocus,fld1.id,true);			
+		wp.showCalendar(n_position,false,n_textdate,'','',startdate,enddate,'',oddeven,nextvailiddate,objecttype,thirdfocus,fld1.id,true);			
+		
+	}
+	else
+	{
+		if(!thirdfocus=="")
+		{
+			otd=wp.document.getElementById(thirdfocus);
+			otd.focus();
+			
+		}
+	}
+	
+	
+}
+//-->
+</SCRIPT>
+
+<META content="MSHTML 6.00.2900.2963" name=GENERATOR></HEAD>
+<BODY bgColor=white leftMargin=0 topMargin=0 onload=resizeCalendar(); 
+marginwidth="0" marginheight="0">
+<TABLE id=tbl0 cellSpacing=0 cellPadding=1 bgColor=#7db6c7 border=0>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE id=Table1 cellSpacing=1 cellPadding=2 width="100%" bgColor=white 
+      border=0>
+        <TBODY>
+        <TR bgColor=#7db6c7>
+          <TD id=prev width=16><A 
+            href="javascript:drawCalendar(yy,mm-1);"><IMG height=16 
+            src="calendar.files/prev.gif" width=16 border=0></A></TD>
+          <TD id=yyyymm style="FONT-SIZE: 12px; COLOR: white" width="99%"></TD>
+          <TD id=next width=16><A 
+            href="javascript:drawCalendar(yy,mm+1);"><IMG height=16 
+            src="calendar.files/next.gif" width=16 
+      border=0></A></TD></TR></TBODY></TABLE>
+      <TABLE id=Table2 cellSpacing=0 cellPadding=0 width=142 bgColor=#def1f8 
+      border=0>
+        <TBODY>
+        <TR bgColor=#ffffff height=18>
+          <TD width=18 bgColor=#ffffff>日</TD>
+          <TD width=18 bgColor=#ffffff>一</TD>
+          <TD width=18 bgColor=#ffffff>二</TD>
+          <TD width=18 bgColor=#ffffff>三</TD>
+          <TD width=18 bgColor=#ffffff>四</TD>
+          <TD width=18 bgColor=#ffffff>五</TD>
+          <TD width=18 bgColor=#ffffff>六</TD></TR>
+        <TR height=1>
+          <TD bgColor=#def1f8 colSpan=7></TD></TR>
+        <SCRIPT language=javascript>
+<!--//
+for(i=0;i<6;i++)
+{
+	str+="<tr height=18>";
+	for(j=1;j<=7;j++)str+="<td id=d"+(i*7+j)+"  bgColor='#DEF1F8'></td>";
+	str+="</tr>";
+}
+document.write(str);
+//-->
+</SCRIPT>
+
+        <TR height=18>
+          <TD bgColor=#def1f8 colSpan=7>&nbsp;</TD></TR>
+        <TR bgColor=#7db6c7 height=20>
+          <TD colSpan=7><A 
+            style="FONT-SIZE: 12px; COLOR: white; TEXT-DECORATION: none" 
+            href="javascript:wp.hideCalendar();">关闭窗口</A></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<SCRIPT language=javascript>
+<!--//
+var bCalLoaded=true;
+//-->
+</SCRIPT>
+</BODY></HTML>
+
